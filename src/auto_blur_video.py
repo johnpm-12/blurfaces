@@ -3,7 +3,8 @@
 import os
 import argparse
 import cv2 as cv
-import tensorflow as tf
+#changed import to deal with changed made in T2
+import tensorflow.compat.v1 as tf
 import numpy as np
 import time
 
@@ -75,7 +76,7 @@ def blurBoxes(image, boxes):
     Argument:
     image -- the image that will be edited as a matrix
     boxes -- list of boxes that will be blurred, each box must be int the format (x_top_left, y_top_left, x_bottom_right, y_bottom_right)
-    
+
     Returns:
     image -- the blurred image as a matrix
     """
@@ -97,6 +98,7 @@ def blurBoxes(image, boxes):
 
 
 def main(args):
+
     # assign model path and threshold
     model_path = args.model_path
     threshold = args.threshold

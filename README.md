@@ -5,6 +5,7 @@ A tool to blur faces or other regions in photos and videos 🕵️‍
 1. [auto_blur_image](./src/auto_blur_image.py): Detects and blurs faces _(or objects)_ in a given image automatically due to a Tensorflow model
 2. [auto_blur_video](./src/auto_blur_video.py): Detects and blurs faces _(or objects)_ in a given video due to a Tensorflow model
 3. [manual_blur_image](./src/manual_blur_image.py): Blurs manually selected faces _(or objects)_
+4. [manual_blur_image](./src/blur_folder.py): Detects and blurs faces _(or objects)_  for all images & videos in a given folder/directory using [auto_blur_image](./src/auto_blur_image.py) & [auto_blur_video](./src/auto_blur_video.py)
 
 > Make sure that you have OpenCV and Tensorflow already installed
 
@@ -26,6 +27,11 @@ A tool to blur faces or other regions in photos and videos 🕵️‍
     * Select your ROI (Region of Interest)
     * Press <kbd>Enter</kbd>
     * Press <kbd>Q</kbd> to finish **or** any key to select another ROI
+    
+#### For `blur_folder.py`:
+3. Run:
+    `python blur_folder.py --i C:\path\to\your\video.mp4`
+    * Hard coded threshold values for images & videos are 0.7 & 0.1.
 
 4. To see running options run _for all codes_:
    `python manual_blur_image.py --help`

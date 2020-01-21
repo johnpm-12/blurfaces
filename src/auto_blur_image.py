@@ -3,7 +3,9 @@
 import os
 import argparse
 import cv2 as cv
-import tensorflow as tf
+#changed import to deal with changed made in T2
+import tensorflow.compat.v1 as tf
+
 import numpy as np
 import time
 
@@ -75,7 +77,7 @@ def blurBoxes(image, boxes):
     Argument:
     image -- the image that will be edited as a matrix
     boxes -- list of boxes that will be blurred, each box must be int the format (x_top_left, y_top_left, x_bottom_right, y_bottom_right)
-    
+
     Returns:
     image -- the blurred image as a matrix
     """
@@ -97,6 +99,7 @@ def blurBoxes(image, boxes):
 
 
 def main(args):
+    tf.disable_v2_behavior()
     # assign model path and threshold
     model_path = args.model_path
     threshold = args.threshold
@@ -118,18 +121,19 @@ def main(args):
     image = blurBoxes(image, boxes)
 
     # show image
-    cv.imshow('blurred', image)
+    #cv.imshow('blurred', image)
 
     # if image will be saved then save it
     if args.output_image:
         cv.imwrite(args.output_image, image)
         print('Image has been saved successfully at', args.output_image,
               'path')
-    cv.imshow('blurred', image)
+    #cv.imshow('blurred', image)
 
     # when any key has been pressed then close window and stop the program
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    #cv.waitKey(0)
+    #cv.destroyAllWindows()
+    return
 
 
 if __name__ == "__main__":
