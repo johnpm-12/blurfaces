@@ -14,13 +14,19 @@ def main(args):
 
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
+            file=  file.replace('\\', '')
+            subdir = subdir.replace('\\', '')
+            inputImage = os.path.join(subdir, file)
+            inputImage=  inputImage.replace('\\', '')
+            inputImage = '"' + inputImage + '"'
+
 
             #checks if already processed
             if "blurred" in file:
                 continue
 
             if file.endswith(".img") or file.endswith(".jpg") or file.endswith(".jpg") :
-                inputImage = os.path.join(subdir, file)
+
 
                 name, ext = os.path.splitext(inputImage)
                 outputImage = "{name}-blurred{ext}".format(name=name, ext=ext)
@@ -34,7 +40,7 @@ def main(args):
                 process = subprocess.Popen(cmd, shell=True)
 
             if file.endswith(".mp4")  :
-                inputImage = os.path.join(subdir, file)
+                #inputImage = os.path.join(subdir, file)
                 name, ext = os.path.splitext(inputImage)
                 outputImage = "{name}-blurred{ext}".format(name=name, ext=ext)
 
