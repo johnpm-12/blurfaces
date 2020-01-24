@@ -3,7 +3,7 @@
 import os
 import argparse
 import cv2 as cv
-#changed import to deal with changed made in T2
+# changed import to deal with changed made in T2
 import tensorflow.compat.v1 as tf
 
 import numpy as np
@@ -50,7 +50,7 @@ class DetectorAPI:
              self.detection_boxes, self.detection_scores,
              self.detection_classes, self.num_detections
          ],
-                              feed_dict={self.image_tensor: image_np_expanded})
+            feed_dict={self.image_tensor: image_np_expanded})
         end_time = time.time()
 
         print("Elapsed Time:", end_time - start_time)
@@ -98,17 +98,21 @@ def blurBoxes(image, boxes):
     return image
 
 
+# create detection object
+odapi = DetectorAPI(path_to_ckpt='../face_model/face.pb')
+
+
 def main(args):
     tf.disable_v2_behavior()
     # assign model path and threshold
-    model_path = args.model_path
-    threshold = args.threshold
+    # model_path = args.model_path
+    threshold = args['threshold']
 
-    # create detection object
-    odapi = DetectorAPI(path_to_ckpt=model_path)
-
+    # print(args['input_image'])
     # open image
-    image = cv.imread(args.input_image)
+    image = cv.imread(args['input_image'])
+    # print(image)
+    # cv.imshow('blurred', image)
 
     # real face detection
     boxes, scores, classes, num = odapi.processFrame(image)
@@ -117,57 +121,59 @@ def main(args):
     # boxes are in (x_top_left, y_top_left, x_bottom_right, y_bottom_right) format
     boxes = [boxes[i] for i in range(0, num) if scores[i] > threshold]
 
-    # apply blurring
-    image = blurBoxes(image, boxes)
+    if len(boxes) > 0:
+        # apply blurring
+        image = blurBoxes(image, boxes)
 
-    # show image
-    #cv.imshow('blurred', image)
+        # show image
+        # cv.imshow('blurred', image)
 
-    # if image will be saved then save it
-    if args.output_image:
-        cv.imwrite(args.output_image, image)
-        print('Image has been saved successfully at', args.output_image,
-              'path')
-    #cv.imshow('blurred', image)
-
+        # if image will be saved then save it
+        if args['output_image']:
+            cv.imwrite(args['output_image'], image)
+            print('Image has been saved successfully at', args['output_image'],
+                  'path')
+        # cv.imshow('blurred', image)
+    else:
+        print('Skipped, no blur')
     # when any key has been pressed then close window and stop the program
-    #cv.waitKey(0)
-    #cv.destroyAllWindows()
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
     return
 
 
-if __name__ == "__main__":
-    # creating argument parser
-    parser = argparse.ArgumentParser(description='Image blurring parameters')
+# if __name__ == "__main__":
+#     # creating argument parser
+#     parser = argparse.ArgumentParser(description='Image blurring parameters')
 
-    # adding arguments
-    parser.add_argument('-i',
-                        '--input_image',
-                        help='Path to your image',
-                        type=str,
-                        required=True)
-    parser.add_argument('-m',
-                        '--model_path',
-                        help='Path to .pb model',
-                        type=str,
-                        required=True)
-    parser.add_argument('-o',
-                        '--output_image',
-                        help='Output file path',
-                        type=str)
-    parser.add_argument('-t',
-                        '--threshold',
-                        help='Face detection confidence',
-                        default=0.7,
-                        type=float)
-    args = parser.parse_args()
-    print(args)
-    # if input image path is invalid then stop
-    assert os.path.isfile(args.input_image), 'Invalid input file'
+#     # adding arguments
+#     parser.add_argument('-i',
+#                         '--input_image',
+#                         help='Path to your image',
+#                         type=str,
+#                         required=True)
+#     parser.add_argument('-m',
+#                         '--model_path',
+#                         help='Path to .pb model',
+#                         type=str,
+#                         required=True)
+#     parser.add_argument('-o',
+#                         '--output_image',
+#                         help='Output file path',
+#                         type=str)
+#     parser.add_argument('-t',
+#                         '--threshold',
+#                         help='Face detection confidence',
+#                         default=0.7,
+#                         type=float)
+#     args = parser.parse_args()
+#     print(args)
+#     # if input image path is invalid then stop
+#     assert os.path.isfile(args.input_image), 'Invalid input file'
 
-    # if output directory is invalid then stop
-    if args.output_image:
-        assert os.path.isdir(os.path.dirname(
-            args.output_image)), 'No such directory'
+#     # if output directory is invalid then stop
+#     if args.output_image:
+#         assert os.path.isdir(os.path.dirname(
+#             args.output_image)), 'No such directory'
 
-    main(args)
+#     main(args)
